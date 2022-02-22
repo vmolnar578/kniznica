@@ -32,14 +32,14 @@ public class bookController {
 
     //Delete book by id
     //DELETE http://localhost:8080/api/books/{bookId}
-    @DeleteMapping("/api/books{bookId}")
+    @DeleteMapping("/api/books/{bookId}")
     public void deleteBook(@PathVariable Integer bookId){
         bookService.deleteBook(bookId);
     }
 
     //Update book title by id
     //PUT http://localhost:8080/api/books/{bookId}
-    @PutMapping("/api/books{bookId}")
+    @PutMapping("/api/books/{bookId}")
     public void updateBook(@PathVariable Integer bookId, @RequestBody Book book) {
         bookService.updateBook(bookId, book);
     }
