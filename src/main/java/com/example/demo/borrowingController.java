@@ -7,7 +7,7 @@ import java.util.List;
 public class borrowingController {
     private BorrowingService borrowingService;
 
-    public borrowingController(BookService borrowingService) {
+    public borrowingController(BorrowingService borrowingService) {
         this.borrowingService = borrowingService;
     }
 

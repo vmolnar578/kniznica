@@ -13,10 +13,10 @@ public class BorrowingService {
     private List<Borrowing> init(){
         List<Borrowing> borrowings = new ArrayList<>();
         Borrowing borrowing = new Borrowing();
-        borrowing.xxx;
-        borrowing.xxx;
-        borrowing.xxx;
+        borrowing.setBookId(1);
+        borrowing.setCustomerId(1);
         borrowings.add(borrowing);
+        return borrowings;
     }
 
     public Integer createBorrowing(Borrowing borrowing) {
