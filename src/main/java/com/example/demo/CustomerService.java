@@ -19,6 +19,7 @@ public class CustomerService {
         c1.setFirstname("Zakaznik 1");
         c1.setLastname("Priezvisko 1");
         c1.setContact("email1@gmail.com");
+
         Customer c2 = new Customer();
         c2.setFirstname("Zakaznik 2");
         c2.setLastname("Priezvisko 2");
