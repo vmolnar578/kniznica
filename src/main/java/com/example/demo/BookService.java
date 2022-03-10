@@ -4,43 +4,34 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BookService {
-    private List<Book> books;
+    private final BookRepository bookRepository;
 
-    public BookService() {
-        this.books = init();
+    public BookService(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
     }
 
-    private List<Book> init(){
-        List<Book> books = new ArrayList<>();
-        Book book = new Book();
-        book.setAuthorFirstname("Peter");
-        book.setAuthorLastname("Lynch");
-        book.setTitle("One up on Wall Street");
-        book.setIsbn("ISBN12A69C");
-        book.setCount(10);
-        books.add(book);
-
-        Book book2 = new Book();
-        book2.setAuthorFirstname("Joanne");
-        book2.setAuthorLastname("Rowling");
-        book2.setTitle("Harry Potter");
-        book2.setIsbn("ISBN53B44A");
-        book2.setCount(20);
-        books.add(book2);
-        return books;
+    public BookEntity createBook(Book book) {
+        BookEntity bookEntity = new BookEntity();
+        bookEntity.setTitle(book.getTitle());
+        bookEntity.setIsbn(book.getIsbn());
+        bookEntity.setAuthorFirstname(book.getAuthorFirstname());
+        bookEntity.setAuthorLastname(book.getAuthorLastname());
+        bookEntity.setCount(book.getCount());
+        return this.bookRepository.save(bookEntity);
     }
 
-    public List<Book> getBooks(String bookTitle) {
+    /*public List<Book> getBooks(String bookTitle) {
         if (bookTitle == null){
-            return this.books;
+            return this.bookRepository;
         }
 
         List<Book> filteredBooks = new ArrayList<>();
 
-        for(Book book : books){
+        for(Book book : bookRepository){
             if (book.getTitle().equals(bookTitle)){
                 filteredBooks.add(book);
             }
@@ -49,20 +40,27 @@ public class BookService {
     }
 
     public Book getBook(int bookId) {
-        return this.books.get(bookId);
-    }
+        return this.bookRepository.get(bookId);
+    }*/
 
-    public Integer createBook(Book book) {
-        this.books.add(book);
-
-        return this.books.size() -1;
-    }
-
-    public void deleteBook(int bookId) {
-        this.books.remove(bookId);
+    public BookEntity getBook(int bookId) {
+        Optional<BookEntity> book = bookRepository.findById((long) bookId);
+        return book.orElse(null);
     }
 
     public void updateBook(int bookId, Book book) {
-        this.books.get(bookId).setTitle(book.getTitle());
+        Optional<BookEntity> bookEntity = bookRepository.findById((long) bookId);
+
+        if (bookEntity.isPresent()) {
+            bookEntity.get().setTitle(book.getTitle());
+            bookEntity.get().setIsbn(book.getIsbn());
+            bookEntity.get().setAuthorFirstname(book.getAuthorFirstname());
+            bookEntity.get().setAuthorLastname(book.getAuthorLastname());
+            bookEntity.get().setCount(book.getCount());
+        }
+    }
+
+    public void deleteBook(Integer bookId) {
+        BookRepository.delete(bookId);
     }
 }
