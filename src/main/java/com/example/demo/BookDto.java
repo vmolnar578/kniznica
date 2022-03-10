@@ -1,38 +1,58 @@
 package com.example.demo;
- 
-import org.springframework.web.bind.annotation.*;
-import java.util.List;
- 
-@RestController
-public class bookController {
-    private BookService bookService;
- 
-    public bookController(BookService bookService) {
-        this.bookService = bookService;
+
+public class BookDto {
+    private Integer id;
+    private String authorFirstname;
+    private String authorLastname;
+    private String title;
+    private String isbn;
+    private Integer count;
+
+    public Integer getId() {
+        return id;
     }
- 
-    @PostMapping("/api/books")
-    public BookEntity createBook(@RequestBody Book book){
-        return bookService.createBook(book);
+
+    public void setId(Integer id) {
+        this.id = id;
     }
- 
-    @GetMapping("/api/books")
-    public List<BookDto> getBooks(@RequestParam(required=false, name="title") String bookTitle) {
-        return bookService.getBooks(bookTitle);
+
+    public String getAuthorFirstname() {
+        return authorFirstname;
     }
- 
-    @GetMapping("/api/books/{bookId}")
-    public BookDto getBook(@PathVariable Integer bookId){
-        return addToDto(bookService.getBook(bookId));
+
+    public void setAuthorFirstname(String authorFirstname) {
+        this.authorFirstname = authorFirstname;
     }
- 
-    @DeleteMapping("/api/books/{bookId}")
-    public void deleteBook(@PathVariable Integer bookId){
-        bookService.deleteBook(bookId);
+
+    public String getAuthorLastname() {
+        return authorLastname;
     }
- 
-    @PutMapping("/api/books/{bookId}")
-    public void updateBook(@PathVariable Integer bookId, @RequestBody Book book) {
-        bookService.updateBook(bookId, book);
+
+    public void setAuthorLastname(String authorLastname) {
+        this.authorLastname = authorLastname;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getIsbn() {
+        return isbn;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
     }
 }

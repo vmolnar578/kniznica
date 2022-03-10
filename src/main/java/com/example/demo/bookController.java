@@ -12,18 +12,18 @@ public class bookController {
     }
 
     @PostMapping("/api/books")
-    public Integer createBook(@RequestBody Book book){
+    public BookEntity createBook(@RequestBody Book book){
         return bookService.createBook(book);
     }
 
     @GetMapping("/api/books")
-    public List<Book> getBooks(@RequestParam(required=false, name="title") String bookTitle) {
+    public List<BookDto> getBooks(@RequestParam(required=false, name="title") String bookTitle) {
         return bookService.getBooks(bookTitle);
     }
 
     @GetMapping("/api/books/{bookId}")
-    public Book getBook(@PathVariable Integer bookId){
-        return bookService.getBook(bookId);
+    public BookDto getBook(@PathVariable Integer bookId){
+        return addToDto(bookService.getBook(bookId));
     }
 
     @DeleteMapping("/api/books/{bookId}")
