@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -12,27 +13,34 @@ public class bookController {
     }
 
     @PostMapping("/api/books")
-    public BookEntity createBook(@RequestBody Book book){
+    public BookEntity createBook(@RequestBody BookDto book){
         return bookService.createBook(book);
     }
 
     @GetMapping("/api/books")
-    public List<BookDto> getBooks(@RequestParam(required=false, name="title") String bookTitle) {
+    public List<BookEntity> getBooks(@RequestParam(required=false, name="title") String bookTitle) {
         return bookService.getBooks(bookTitle);
     }
 
     @GetMapping("/api/books/{bookId}")
-    public BookDto getBook(@PathVariable Integer bookId){
-        return addToDto(bookService.getBook(bookId));
+    public BookEntity getBook(@PathVariable Integer bookId){
+        return bookService.getBook(bookId);
     }
 
     @DeleteMapping("/api/books/{bookId}")
-    public void deleteBook(@PathVariable Integer bookId){
+    public void deleteBook(@PathVariable Long bookId){
         bookService.deleteBook(bookId);
     }
 
     @PutMapping("/api/books/{bookId}")
-    public void updateBook(@PathVariable Integer bookId, @RequestBody Book book) {
-        bookService.updateBook(bookId, book);
+    public BookDto updateBook(@PathVariable Integer bookId, @RequestBody BookDto book) {
+        BookDto bookDto = new BookDto();
+        bookDto.setId(book.getId());
+        bookDto.setTitle(book.getTitle());
+        bookDto.setAuthorFirstname(book.getAuthorFirstname());
+        bookDto.setAuthorLastname(book.getAuthorLastname());
+        bookDto.setIsbn(book.getIsbn());
+        bookDto.setCount(book.getCount());
+        return bookDto;
     }
 }

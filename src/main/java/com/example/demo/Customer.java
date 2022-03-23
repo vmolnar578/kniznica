@@ -1,9 +1,10 @@
 package com.example.demo;
 
+@Deprecated
 public class Customer {
-    String firstname;
-    String lastname;
-    String contact;
+    private String firstname;
+    private String lastname;
+    private String contact;
 
     public String getFirstname() {
         return firstname;

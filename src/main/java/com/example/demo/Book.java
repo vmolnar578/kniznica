@@ -1,5 +1,6 @@
 package com.example.demo;
 
+@Deprecated
 public class Book {
     private String authorFirstname;
     private String authorLastname;
