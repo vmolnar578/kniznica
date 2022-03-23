@@ -1,5 +1,6 @@
 package com.example.demo;
 
+@Deprecated
 public class Borrowing {
     private Integer customerId;
     private Integer bookId;

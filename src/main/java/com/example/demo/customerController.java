@@ -1,7 +1,6 @@
 package com.example.demo;
 
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @RestController
 public class customerController {
@@ -12,23 +11,23 @@ public class customerController {
     }
 
     @PostMapping("/api/customers")
-    public Integer createCustomer(@RequestBody Customer customer){
+    public CustomerEntity createCustomer(@RequestBody CustomerDto customer){
         return customerService.createCustomer(customer);
     }
-    @GetMapping("/api/customers")
-    public List<Customer> listCustomers(@RequestParam(name="lastname") String lastname) {
-        return customerService.listCustomers(lastname);
-    }
+
     @GetMapping("/api/customers/{customerId}")
-    public Customer customerById(@PathVariable Integer customerId) {
-        return customerService.customerById(customerId);
+    public CustomerDto customerById(@PathVariable Integer customerId) {
+        CustomerEntity customerEntity = customerService.getCustomer(customerId);
+        CustomerDto customerDto = new CustomerDto();
+        customerDto.setId(customerEntity.getId());
+        customerDto.setFirstname(customerEntity.getFirstname());
+        customerDto.setLastname(customerEntity.getLastname());
+        customerDto.setContact(customerEntity.getContact());
+        return customerDto;
     }
-    @PutMapping("/api/customers/{customerId}")
-    public Customer updateCustomer(@PathVariable Integer customerId, @RequestBody Customer customer) {
-        return customerService.updateCustomer(customerId,customer);
-    }
+
     @DeleteMapping("/api/customers/{customerId}")
-    public void deleteCustomer(@PathVariable Integer customerId) {
+    public void deleteCustomer(@PathVariable Long customerId) {
         customerService.deleteCustomer(customerId);
     }
 }
