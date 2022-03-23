@@ -1,57 +1,50 @@
 package com.example.demo;
 
 import org.springframework.stereotype.Service;
-
+import java.util.Optional;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class CustomerService {
-    private List<Customer> customers;
+    private final CustomerRepository customerRepository;
 
-    public CustomerService(){
-        this.customers = init();
+    public CustomerService(CustomerRepository customersRepository) {
+        this.customerRepository = customersRepository;
     }
 
-    private List<Customer> init(){
-        List<Customer> customers = new ArrayList<>();
-        Customer c1 = new Customer();
-        c1.setFirstname("Zakaznik 1");
-        c1.setLastname("Priezvisko 1");
-        c1.setContact("email1@gmail.com");
+    public CustomerEntity createCustomer(CustomerDto customer){
+        CustomerEntity customerEntity = new CustomerEntity();
+        customerEntity.setFirstname(customer.getFirstname());
+        customerEntity.setLastName(customer.getLastname());
+        customerEntity.setContact(customer.getContact());
+        return this.customerRepository.save(customerEntity);
+    }
 
-        Customer c2 = new Customer();
-        c2.setFirstname("Zakaznik 2");
-        c2.setLastname("Priezvisko 2");
-        c2.setContact("email2@outlook.com");
-        customers.add(c1);
-        customers.add(c2);
-        return customers;
-    }
-    public Integer createCustomer(Customer customer){
-        this.customers.add(customer);
-        return this.customers.size() -1;
-    }
-    public List<Customer> listCustomers(String lastname) {
-        List<Customer> filteredCustomers = new ArrayList<>();
-        for(Customer c : customers){
-            if (c.getLastname().equals(lastname)){
-                filteredCustomers.add(c);
-                System.out.println("xd");
-            }
+    public List<CustomerEntity> getCustomers(String lastname){
+        List<CustomerEntity> full = (List<CustomerEntity>) customerRepository.findAll();
+        if(lastname == null) { return full; }
+        List<CustomerEntity> filtered = new ArrayList<>();
+        for (CustomerEntity c : full){
+            if (lastname.equals(c.getLastname())) { filtered.add(c); }
         }
-        return filteredCustomers;
+        return filtered;
     }
-    public Customer customerById(Integer customerId) {
-        return this.customers.get(customerId);
+
+    public CustomerEntity getCustomer(Integer id) {
+        Optional<CustomerEntity> customer = customerRepository.findById(Long.valueOf(id));
+        return customer.orElse(null);
     }
-    public Customer updateCustomer(Integer customerId, Customer customer) {
-        this.customers.get(customerId).setFirstname(customer.getFirstname());
-        this.customers.get(customerId).setLastname(customer.getLastname());
-        this.customers.get(customerId).setContact(customer.getContact());
-        return this.customers.get(customerId);
+
+    public CustomerEntity updateCustomer(Long customerId, CustomerDto customer) {
+        Optional<CustomerEntity> customerEntity = customerRepository.findById(customerId);
+        customerEntity.get().setFirstname(customer.getFirstname());
+        customerEntity.get().setLastName(customer.getLastname());
+        customerEntity.get().setContact(customer.getContact());
+        return customerRepository.save(customerEntity.get());
     }
-    public void deleteCustomer(Integer customerId) {
-        this.customers.remove(this.customers.get(customerId));
+
+    public void deleteCustomer(Long customerId) {
+        customerRepository.deleteById(customerId);
     }
 }

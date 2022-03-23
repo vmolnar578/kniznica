@@ -14,7 +14,7 @@ public class BookService {
         this.bookRepository = bookRepository;
     }
 
-    public BookEntity createBook(Book book) {
+    public BookEntity createBook(BookDto book) {
         BookEntity bookEntity = new BookEntity();
         bookEntity.setTitle(book.getTitle());
         bookEntity.setIsbn(book.getIsbn());
@@ -24,31 +24,27 @@ public class BookService {
         return this.bookRepository.save(bookEntity);
     }
 
-    /*public List<Book> getBooks(String bookTitle) {
+    public List<BookEntity> getBooks(String bookTitle) {
+        List<BookEntity> books = bookRepository.findAll();
         if (bookTitle == null){
-            return this.bookRepository;
+            return books;
         }
 
-        List<Book> filteredBooks = new ArrayList<>();
-
-        for(Book book : bookRepository){
+        List<BookEntity> specificBooks = new ArrayList<>();
+        for(BookEntity book : books){
             if (book.getTitle().equals(bookTitle)){
-                filteredBooks.add(book);
+                specificBooks.add(book);
             }
         }
-        return filteredBooks;
+        return specificBooks;
     }
-
-    public Book getBook(int bookId) {
-        return this.bookRepository.get(bookId);
-    }*/
 
     public BookEntity getBook(int bookId) {
         Optional<BookEntity> book = bookRepository.findById((long) bookId);
         return book.orElse(null);
     }
 
-    public void updateBook(int bookId, Book book) {
+    public void updateBook(int bookId, BookDto book) {
         Optional<BookEntity> bookEntity = bookRepository.findById((long) bookId);
 
         if (bookEntity.isPresent()) {
@@ -60,7 +56,7 @@ public class BookService {
         }
     }
 
-    public void deleteBook(Integer bookId) {
-        BookRepository.delete(bookId);
+    public void deleteBook(Long bookId) {
+        bookRepository.deleteById(bookId);
     }
 }

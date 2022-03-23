@@ -1,40 +1,44 @@
 package com.example.demo;
 
-import java.util.ArrayList;
+import org.springframework.stereotype.Service;
+import java.util.Optional;
 import java.util.List;
 
+@Service
 public class BorrowingService {
-    private List<Borrowing> borrowings;
+    private final BookService bookService;
+    private final BorrowingRepository borrowingRepository;
+    private final CustomerService customersService;
 
-    public BorrowingService() {
-        this.borrowings = init();
+    public BorrowingService(BorrowingRepository borrowings, CustomerService customers, BookService books) {
+        this.bookService = books;
+        this.borrowingRepository = borrowings;
+        this.customersService = customers;
     }
 
-    private List<Borrowing> init(){
-        List<Borrowing> borrowings = new ArrayList<>();
-        Borrowing borrowing = new Borrowing();
-        borrowing.setBookId(1);
-        borrowing.setCustomerId(1);
-        borrowings.add(borrowing);
-        return borrowings;
+    public List<BorrowingEntity> getBorrowings() {
+        return borrowingRepository.findAll();
     }
 
-    public Integer createBorrowing(Borrowing borrowing) {
-        this.borrowings.add(borrowing);
-
-        return this.borrowings.size() -1;
+    public BorrowingEntity createBorrowing(BorrowingDto request) {
+        BorrowingEntity borrowing = new BorrowingEntity();
+        CustomerEntity customer = customersService.getCustomer(Math.toIntExact(request.getCustomerId()));
+        BookEntity book = bookService.getBook(request.getBookId());
+        if (customer != null && book != null) {
+            borrowing.setCustomer(customer);
+            borrowing.setBook(book);
+            return borrowingRepository.save(borrowing);
+        }
+        return null;
     }
 
-    public List<Borrowing> getBorrowings() {
-        return this.borrowings;
+    public BorrowingEntity getBorrowing(Long borrowingId) {
+        Optional<BorrowingEntity> borrowing = borrowingRepository.findById(borrowingId);
+        return borrowing.orElse(null);
     }
 
-    public Borrowing getBorrowing(int borrowingId) {
-        return this.borrowings.get(borrowingId);
-    }
-
-    public void deleteBorrowing(int borrowingId) {
-        this.borrowings.remove(borrowingId);
+    public void deleteBorrowing(Long borrowingId){
+        borrowingRepository.deleteById(borrowingId);
     }
 }
 
